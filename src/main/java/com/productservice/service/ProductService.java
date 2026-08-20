@@ -3,12 +3,12 @@ package com.productservice.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.productservice.dto.ProductRequest;
 import com.productservice.dto.ProductResponse;
 import com.productservice.entity.Product;
+import com.productservice.exception.ProductNotFoundException;
 import com.productservice.repository.ProductRepository;
 @Service
 public class ProductService {
@@ -33,10 +33,10 @@ public class ProductService {
         return mapToResponse(savedProduct);
     }
 
-    public ProductResponse getProductById(UUID id) throws Exception {
+    public ProductResponse getProductById(UUID id) {
 
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new Exception(
+                .orElseThrow(() -> new ProductNotFoundException(
                         "Product not found with id: " + id
                 ));
 
