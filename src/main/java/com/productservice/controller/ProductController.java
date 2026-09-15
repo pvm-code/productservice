@@ -148,4 +148,19 @@ public class ProductController {
                 )
         );
     }
+    @PutMapping("/{id}/stock/release")
+    public ResponseEntity<ApiResponse<Void>> increaseStock(
+            @PathVariable UUID id,
+            @RequestParam int quantity) {
+
+        productService.increaseStock(id, quantity);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Stock released successfully",
+                        null
+                )
+        );
+    }
 }
