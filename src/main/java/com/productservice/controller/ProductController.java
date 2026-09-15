@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.productservice.dto.ApiResponse;
@@ -99,5 +100,52 @@ public class ProductController {
                         true,
                         "Product deactivated successfully",
                         null));
+    }
+    
+    
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> searchProducts(
+            @RequestParam String keyword) {
+
+        List<ProductResponse> products = productService.searchProducts(keyword);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Products searched successfully",
+                        products
+                )
+        );
+    }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getProductsByCategory(
+            @PathVariable String category) {
+
+        List<ProductResponse> products =
+                productService.getProductsByCategory(category);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Products fetched by category successfully",
+                        products
+                )
+        );
+    }
+    @PutMapping("/{id}/stock")
+    public ResponseEntity<ApiResponse<Void>> decreaseStock(
+            @PathVariable UUID id,
+            @RequestParam int quantity) {
+
+        productService.decreaseStock(id, quantity);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Stock decreased successfully",
+                        null
+                )
+        );
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.productservice.dto.ProductRequest;
 import com.productservice.dto.ProductResponse;
 import com.productservice.entity.Product;
+import com.productservice.exception.InsufficientStockException;
 import com.productservice.exception.ProductNotFoundException;
 import com.productservice.repository.ProductRepository;
 
@@ -79,7 +80,48 @@ public class ProductService {
 
         return mapToResponse(updatedProduct);
     }
+    @Transactional
+    public void decreaseStock(UUID productId, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero");
+        }
 
+        if (!productRepository.existsById(productId)) {
+            throw new ProductNotFoundException(
+                    "Product not found: " + productId
+            );
+        }
+
+        int updatedRows =
+                productRepository.decreaseStockIfAvailable(productId, quantity);
+
+        if (updatedRows == 0) {
+            throw new InsufficientStockException(
+                    "Insufficient stock for product: " + productId
+            );
+        }
+    }
+    @Transactional
+    public void increaseStock(UUID productId, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero");
+        }
+
+        if (!productRepository.existsById(productId)) {
+            throw new ProductNotFoundException(
+                    "Product not found: " + productId
+            );
+        }
+
+        int updatedRows =
+                productRepository.increaseStock(productId, quantity);
+
+        if (updatedRows == 0) {
+            throw new ProductNotFoundException(
+                    "Product is inactive or cannot be updated: " + productId
+            );
+        }
+    }
     @Transactional
     public void deactivateProduct(UUID id) {
 
@@ -92,7 +134,33 @@ public class ProductService {
 
         productRepository.save(product);
     }
+    @Transactional(readOnly = true)
+    public List<ProductResponse> searchProducts(String keyword) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
 
+        if (normalizedKeyword.isBlank()) {
+            return getAllProducts();
+        }
+
+        return productRepository.searchActiveProducts(normalizedKeyword)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getProductsByCategory(String category) {
+        String normalizedCategory = category == null ? "" : category.trim();
+
+        if (normalizedCategory.isBlank()) {
+            return List.of();
+        }
+
+        return productRepository.findActiveProductsByCategory(normalizedCategory)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
     private ProductResponse mapToResponse(Product product) {
 
         ProductResponse response = new ProductResponse();
