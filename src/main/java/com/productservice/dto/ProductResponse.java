@@ -9,8 +9,10 @@ public class ProductResponse {
     private UUID id;
     private String name;
     private String description;
+    private String category;
     private BigDecimal price;
     private Integer stock;
+    private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -38,6 +40,14 @@ public class ProductResponse {
         this.description = description;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -52,6 +62,14 @@ public class ProductResponse {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public LocalDateTime getCreatedAt() {

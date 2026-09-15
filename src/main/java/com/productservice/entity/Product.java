@@ -27,6 +27,9 @@ public class Product {
 
     @Column(name = "description", length = 2000)
     private String description;
+    
+    @Column(name = "category", nullable = false, length = 100)
+    private String category;
 
     @Column(name = "price", nullable = false, precision = 19, scale = 2)
     private BigDecimal price;
@@ -79,7 +82,13 @@ public class Product {
     public void setDescription(String description) {
         this.description = description;
     }
+    public String getCategory() {
+        return category;
+    }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
     public BigDecimal getPrice() {
         return price;
     }

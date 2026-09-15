@@ -12,23 +12,20 @@ import com.productservice.dto.ApiResponse;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(ProductNotFoundException.class)
-	public ResponseEntity<ApiResponse<Void>> handleProductNotFound(ProductNotFoundException ex){
-		
-		
-		ApiResponse<Void> response = new ApiResponse<>(
-				
-				false,
-				ex.getMessage(),
-				null
-				);
-		
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-		
-		
-	}
-	
-	
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleProductNotFound(
+            ProductNotFoundException ex) {
+
+        ApiResponse<Void> response = new ApiResponse<>(
+                false,
+                ex.getMessage(),
+                null
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> handleValidationException(
@@ -38,7 +35,8 @@ public class GlobalExceptionHandler {
                 .getFieldErrors()
                 .stream()
                 .findFirst()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .map(error ->
+                        error.getField() + ": " + error.getDefaultMessage())
                 .orElse("Validation failed");
 
         ApiResponse<Void> response = new ApiResponse<>(
@@ -51,7 +49,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
-	
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(
             MethodArgumentTypeMismatchException ex) {
@@ -66,5 +64,19 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
-	
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Void>> handleGenericException(
+            Exception ex) {
+
+        ApiResponse<Void> response = new ApiResponse<>(
+                false,
+                "An unexpected error occurred",
+                null
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(response);
+    }
 }
