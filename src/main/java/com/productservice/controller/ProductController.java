@@ -133,7 +133,7 @@ public class ProductController {
                 )
         );
     }
-    @PutMapping("/{id}/stock")
+    @PutMapping("/internal/inventory/{id}/reserve")
     public ResponseEntity<ApiResponse<Void>> decreaseStock(
             @PathVariable UUID id,
             @RequestParam int quantity) {
@@ -148,7 +148,7 @@ public class ProductController {
                 )
         );
     }
-    @PutMapping("/{id}/stock/release")
+    @PutMapping("/internal/inventory/{id}/release")
     public ResponseEntity<ApiResponse<Void>> increaseStock(
             @PathVariable UUID id,
             @RequestParam int quantity) {
