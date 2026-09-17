@@ -133,34 +133,5 @@ public class ProductController {
                 )
         );
     }
-    @PutMapping("/internal/inventory/{id}/reserve")
-    public ResponseEntity<ApiResponse<Void>> decreaseStock(
-            @PathVariable UUID id,
-            @RequestParam int quantity) {
-
-        productService.decreaseStock(id, quantity);
-
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
-                        "Stock decreased successfully",
-                        null
-                )
-        );
-    }
-    @PutMapping("/internal/inventory/{id}/release")
-    public ResponseEntity<ApiResponse<Void>> increaseStock(
-            @PathVariable UUID id,
-            @RequestParam int quantity) {
-
-        productService.increaseStock(id, quantity);
-
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
-                        "Stock released successfully",
-                        null
-                )
-        );
-    }
+    
 }
